@@ -11,4 +11,12 @@ import java.util.List;
 @Repository
 public interface IPreguntaRepository extends JpaRepository<Pregunta, Integer> {
 
+@Query("from Pregunta p where p.tituloPregunta like %:tituloPregunta%")
+    List<Pregunta> buscarPregunta(@Param("tituloPregunta") String tituloPregunta);
+
+    @Query("from Pregunta p where p.usuario.nombreUsuario like %:nombreUsuario%")
+    List<Pregunta> buscarUsuario(@Param("nombreUsuario") String nombreUsuario);
+
+    @Query(value = "select u.nombre_usuario,count(p.respuesta_pregunta) as PreguntasRespondidas from pregunta p inner join usuario u on u.id_usuario=p.id_usuario where p.respuesta_pregunta = '' group by u.nombre_usuario",nativeQuery = true)
+    List<String[]>buscarPreguntasRespondidasporEspecialistas();
 }
